@@ -24,15 +24,15 @@ RUN cd /tmp/openssl-"${OPENSSL_VERSION}" && \
     ./config --prefix=/opt/openssl/openssl-"${OPENSSL_VERSION}" shared zlib && make && make install
 
 # Download, configure and install Apache
-RUN wget -P /tmp http://www.dsgnwrld.com/am//httpd/httpd-"${APACHE_VERSION}".tar.gz && \
+RUN wget -P /tmp http://www-us.apache.org/dist//httpd/httpd-"${APACHE_VERSION}".tar.gz && \
     tar -xf /tmp/httpd-"${APACHE_VERSION}".tar.gz -C /tmp && \
     rm -f /tmp/httpd-"${APACHE_VERSION}".tar.gz
 RUN cd /tmp/httpd-"${APACHE_VERSION}" && \
-    wget -P /tmp http://apache.mesi.com.ar//apr/apr-"${APR_VERSION}".tar.gz && \
+    wget -P /tmp http://www-us.apache.org/dist//apr/apr-"${APR_VERSION}".tar.gz && \
     tar -xf /tmp/apr-"${APR_VERSION}".tar.gz -C ./srclib && \
     mv ./srclib/apr-"${APR_VERSION}" ./srclib/apr && \
     rm -f /tmp/apr-"${APR_VERSION}".tar.gz && \
-    wget -P /tmp http://apache.mesi.com.ar//apr/apr-util-"${APRU_VERSION}".tar.gz && \
+    wget -P /tmp http://www-us.apache.org/dist//apr/apr-util-"${APRU_VERSION}".tar.gz && \
     tar -xf /tmp/apr-util-"${APRU_VERSION}".tar.gz -C ./srclib && \
     mv ./srclib/apr-util-"${APRU_VERSION}" ./srclib/apr-util && \
     rm -f /tmp/apr-util-"${APRU_VERSION}".tar.gz && \
