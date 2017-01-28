@@ -14,14 +14,14 @@ RUN wget -P /tmp https://ftp.pcre.org/pub/pcre/pcre-"${PCRE_VERSION}".tar.gz && 
     tar -xf /tmp/pcre-"${PCRE_VERSION}".tar.gz -C /tmp && \
     rm -f /tmp/pcre-"${PCRE_VERSION}".tar.gz
 RUN cd /tmp/pcre-"${PCRE_VERSION}" && \
-    ./configure --prefix=/usr/local/pcre && make && make install
+    ./configure --prefix=/opt/pcre/pcre-"${PCRE_VERSION}" && make && make install
 
 # Download, configure and install OpenSSL
 RUN wget -P /tmp https://www.openssl.org/source/openssl-"${OPENSSL_VERSION}".tar.gz && \
     tar -xf /tmp/openssl-"${OPENSSL_VERSION}".tar.gz -C /tmp && \
     rm -f /tmp/openssl-"${OPENSSL_VERSION}".tar.gz
 RUN cd /tmp/openssl-"${OPENSSL_VERSION}" && \
-    ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl && make && make install
+    ./config --prefix=/opt/openssl/openssl-"${OPENSSL_VERSION}" shared zlib && make && make install
 
 # Download, configure and install Apache
 RUN wget -P /tmp http://www.dsgnwrld.com/am//httpd/httpd-"${APACHE_VERSION}".tar.gz && \
@@ -37,22 +37,20 @@ RUN cd /tmp/httpd-"${APACHE_VERSION}" && \
     mv ./srclib/apr-util-"${APRU_VERSION}" ./srclib/apr-util && \
     rm -f /tmp/apr-util-"${APRU_VERSION}".tar.gz && \
     ./configure \
-        --prefix=/usr/local/apache2 \
+        --prefix=/opt/httpd \
         --sbindir=/usr/local/sbin \
-        --with-ssl=/usr/local/ssl \
+        --with-ssl=/opt/openssl/openssl-"${OPENSSL_VERSION}" \
         --enable-ssl \
         --enable-ssl-staticlib-deps \
         --enable-mods-static=ssl \
         --enable-proxy \
         --with-included-apr \
-        --with-pcre=/usr/local/pcre && \
+        --with-pcre=/opt/pcre/pcre-"${PCRE_VERSION}" && \
     make && make install
 
 # Clean up unnecessary artifacts
 WORKDIR /usr/local/apache2/conf
-RUN rm -rf /tmp/db-"${BERKELEY_VERSION}" && \
-    rm -rf /tmp/httpd-"${APACHE_VERSION}" && \
-    rm -rf /tmp/openldap-"${OPENLDAP_VERSION}" && \
+RUN rm -rf /tmp/httpd-"${APACHE_VERSION}" && \
     rm -rf /tmp/openssl-"${OPENSSL_VERSION}" && \
     rm -rf /tmp/pcre-"${PCRE_VERSION}"
 
