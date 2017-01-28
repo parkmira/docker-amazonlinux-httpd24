@@ -37,7 +37,7 @@ RUN cd /tmp/httpd-"${APACHE_VERSION}" && \
     mv ./srclib/apr-util-"${APRU_VERSION}" ./srclib/apr-util && \
     rm -f /tmp/apr-util-"${APRU_VERSION}".tar.gz && \
     ./configure \
-        --prefix=/opt/httpd \
+        --prefix=/opt/httpd/httpd-"${APACHE_VERSION}" \
         --sbindir=/usr/local/sbin \
         --with-ssl=/opt/openssl/openssl-"${OPENSSL_VERSION}" \
         --enable-ssl \
@@ -49,7 +49,7 @@ RUN cd /tmp/httpd-"${APACHE_VERSION}" && \
     make && make install
 
 # Clean up unnecessary artifacts
-WORKDIR /usr/local/apache2/conf
+WORKDIR /opt/httpd/httpd-"${APACHE_VERSION}"/conf
 RUN rm -rf /tmp/httpd-"${APACHE_VERSION}" && \
     rm -rf /tmp/openssl-"${OPENSSL_VERSION}" && \
     rm -rf /tmp/pcre-"${PCRE_VERSION}"
