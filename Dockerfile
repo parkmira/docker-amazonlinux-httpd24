@@ -7,7 +7,7 @@ ENV APACHE_VERSION 2.4.25
 ENV APR_VERSION 1.5.2
 ENV APRU_VERSION 1.5.4
 
-RUN yum -y update && yum -y install wget gcc gcc-c++ perl
+RUN yum -y update && yum -y install wget gcc gcc-c++ perl zlib-devel
 
 # Download, configure and install PCRE
 RUN wget -P /tmp https://ftp.pcre.org/pub/pcre/pcre-"${PCRE_VERSION}".tar.gz && \
