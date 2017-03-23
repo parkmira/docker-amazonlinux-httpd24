@@ -55,6 +55,9 @@ RUN { echo 'ServerName localhost'; \
     echo 'LoadModule socache_shmcb_module modules/mod_socache_shmcb.so'; \
     } >> ./httpd.conf
 
+# Add ld.so.conf
+RUN echo "/opt/openssl/openssl-${OPENSSL_VERSION}/lib" > /etc/ld.so.conf.d/openssl.conf && ldconfig
+
 # Define default command
 CMD ["apachectl", "-D", "FOREGROUND"]
 
