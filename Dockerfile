@@ -10,32 +10,27 @@ ENV APRU_VERSION 1.5.4
 RUN yum -y update && yum -y install wget gcc gcc-c++ perl zlib-devel findutils
 
 # Download, configure and install PCRE
-RUN wget -P /tmp https://ftp.pcre.org/pub/pcre/pcre-"${PCRE_VERSION}".tar.gz && \
-    tar -xf /tmp/pcre-"${PCRE_VERSION}".tar.gz -C /tmp && \
-    rm -f /tmp/pcre-"${PCRE_VERSION}".tar.gz
-RUN cd /tmp/pcre-"${PCRE_VERSION}" && \
+RUN wget -O -  https://ftp.pcre.org/pub/pcre/pcre-"${PCRE_VERSION}".tar.gz | \ 
+    tar -xzf - -C /tmp && \
+    cd /tmp/pcre-"${PCRE_VERSION}" && \
     ./configure --prefix=/opt/pcre/pcre-"${PCRE_VERSION}" && make && make install
 
 # Download, configure and install OpenSSL
-RUN wget -P /tmp https://www.openssl.org/source/openssl-"${OPENSSL_VERSION}".tar.gz && \
-    tar -xf /tmp/openssl-"${OPENSSL_VERSION}".tar.gz -C /tmp && \
-    rm -f /tmp/openssl-"${OPENSSL_VERSION}".tar.gz
-RUN cd /tmp/openssl-"${OPENSSL_VERSION}" && \
+RUN wget -O - https://www.openssl.org/source/openssl-"${OPENSSL_VERSION}".tar.gz | \
+    tar -xzf - -C /tmp && \
+    cd /tmp/openssl-"${OPENSSL_VERSION}" && \
     ./config --prefix=/opt/openssl/openssl-"${OPENSSL_VERSION}" shared zlib && make && make install
 
 # Download, configure and install Apache
-RUN wget -P /tmp http://www-us.apache.org/dist//httpd/httpd-"${APACHE_VERSION}".tar.gz && \
-    tar -xf /tmp/httpd-"${APACHE_VERSION}".tar.gz -C /tmp && \
-    rm -f /tmp/httpd-"${APACHE_VERSION}".tar.gz
-RUN cd /tmp/httpd-"${APACHE_VERSION}" && \
-    wget -P /tmp http://www-us.apache.org/dist//apr/apr-"${APR_VERSION}".tar.gz && \
-    tar -xf /tmp/apr-"${APR_VERSION}".tar.gz -C ./srclib && \
+RUN wget -O - http://www-us.apache.org/dist/httpd/httpd-"${APACHE_VERSION}".tar.gz | \
+    tar -xzf - -C /tmp && \
+     cd /tmp/httpd-"${APACHE_VERSION}" && \
+    wget -O - http://www-us.apache.org/dist/apr/apr-"${APR_VERSION}".tar.gz | \
+    tar -xzf - -C ./srclib && \
     mv ./srclib/apr-"${APR_VERSION}" ./srclib/apr && \
-    rm -f /tmp/apr-"${APR_VERSION}".tar.gz && \
-    wget -P /tmp http://www-us.apache.org/dist//apr/apr-util-"${APRU_VERSION}".tar.gz && \
-    tar -xf /tmp/apr-util-"${APRU_VERSION}".tar.gz -C ./srclib && \
+    wget -O - http://www-us.apache.org/dist//apr/apr-util-"${APRU_VERSION}".tar.gz | \
+    tar -xzf - -C ./srclib && \
     mv ./srclib/apr-util-"${APRU_VERSION}" ./srclib/apr-util && \
-    rm -f /tmp/apr-util-"${APRU_VERSION}".tar.gz && \
     ./configure \
         --prefix=/opt/httpd/httpd-"${APACHE_VERSION}" \
         --sbindir=/usr/local/sbin \
